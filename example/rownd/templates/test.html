@@ -1,0 +1,69 @@
+<h2>Rownd Django Integration Testing</h2>
+
+<p>You are currently {{ is_authenticated|yesno:"authenticated,not authenticated" }}</p>
+{% if is_authenticated %}
+<p>Authenticated as {{ user.email }}</p>
+<p id="api-resp-sample"></p>
+{% endif %}
+
+<script type="text/javascript">
+    (function () {
+        var _rphConfig = (window._rphConfig =
+            window._rphConfig || []);
+        let baseUrl = window.localStorage.getItem('rph_base_url_override') || 'https://hub.rownd.workers.dev';
+        _rphConfig.push(['setBaseUrl', baseUrl]);
+        var d = document,
+            g = d.createElement('script'),
+            s = d.getElementsByTagName('script')[0];
+        g.type = 'text/javascript';
+        g.async = true;
+        g.src = baseUrl + '/static/scripts/rph.js';
+        if (s && s.parentNode) {
+            s.parentNode.insertBefore(g, s);
+        } else {
+            d.body.appendChild(g);
+        }
+    })();
+</script>
+
+<script type="text/javascript">
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // _rphConfig.push(['setApiUrl', 'https://api.us-east-2.dev.rownd.io']);
+    _rphConfig.push(['setAppKey', 'ea1a6191-8efa-4dfb-ab20-83c74fd19675']);
+    _rphConfig.push(['setPostAuthenticationApi', {
+        method: 'post',
+        url: '/rownd/session_authenticate',
+        extra_headers: {
+            'X-CSRFToken': getCookie('csrftoken')
+        }
+    }]);
+    _rphConfig.push(['onLoaded', function () {
+        console.log('loaded');
+        rownd.events.addEventListener('auth', async (e) => {
+            console.log('auth event:', e);
+            let token = await rownd.getAccessToken();
+            let resp = await fetch('/api/users/', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            let body = await resp.json();
+            document.querySelector('#api-resp-sample').innerText = JSON.stringify(body);
+        });
+    }]);
+</script>
