@@ -26,8 +26,12 @@ SECRET_KEY = 'django-insecure-$&^*o0k+a1(-mtng4)#ub+h#brb($vy+u!u5svb#h95a%-2g7y
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "localhost"
+]
 
+# For google One Tap to work
+SECURE_REFERRER_POLICY = "no-referrer-when-downgrade"
 
 # Application definition
 
