@@ -43,7 +43,6 @@ def rownd_authenticate(request):
     token = token.split(" ")[1]
     
     user = authenticate(request, token=token)
-    print(user)
     if user is not None:
         login(request, user)
         return HttpResponse(status=200, content=json.dumps({ 'message': 'Authentication successful', 'should_refresh_page': True }))
@@ -51,4 +50,7 @@ def rownd_authenticate(request):
         return HttpResponse(status=401)
 
 def check_auth(request):
-    return render(request, 'test.html', { 'is_authenticated': request.user.is_authenticated, 'user': request.user })
+    return render(request, 'test.html', {
+        'is_authenticated': request.user.is_authenticated,
+        'user': request.user
+    })

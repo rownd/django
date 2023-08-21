@@ -46,6 +46,17 @@ ROWND = {
 }
 ```
 
+#### A note on Google Sign-in
+If you plan to use Google sign-in, you'll need to add or update one last configuration item in your 
+`settings.py` while developing locally without HTTPS connections enabled. Without this setting, the
+Google One Tap iframe will not load correctly due to a missing Referrer header.
+
+```
+    SECURE_REFERRER_POLICY = "no-referrer-when-downgrade"
+```
+
+
+
 ### Configure the Rownd Hub (required)
 Rownd authentication requires a small code snippet to be embedded within your app, present on all HTML pages.
 Setup for the Hub/snippet itself is outside the scope of this document, but you can find the relevant setup
@@ -113,7 +124,8 @@ urlpatterns = [
 ]
 ```
 
-Finally, update your Rownd Hub code snippet to fire a post-authenticate API request to the session authenticator we just enabled.
+Finally, update your Rownd Hub code snippet to fire post-authenticate and post-sign-out API requests
+ to the session authenticator we just enabled.
 
 ```html
 <script type="text/javascript">
@@ -142,6 +154,13 @@ Finally, update your Rownd Hub code snippet to fire a post-authenticate API requ
     _rphConfig.push(['setPostAuthenticationApi', {
         method: 'post',
         url: '/rownd/session_authenticate',
+        extra_headers: {
+            'X-CSRFToken': getCookie('csrftoken')
+        }
+    }]);
+    _rphConfig.push(['setPostSignOutApi', {
+        method: 'post',
+        url: '/rownd/session_post_sign_out',
         extra_headers: {
             'X-CSRFToken': getCookie('csrftoken')
         }

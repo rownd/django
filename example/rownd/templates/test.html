@@ -3,6 +3,7 @@
 <p>You are currently {{ is_authenticated|yesno:"authenticated,not authenticated" }}</p>
 {% if is_authenticated %}
 <p>Authenticated as {{ user.email }}</p>
+<p>User data: {{ user }}</p>
 <p id="api-resp-sample"></p>
 {% endif %}
 
@@ -10,7 +11,7 @@
     (function () {
         var _rphConfig = (window._rphConfig =
             window._rphConfig || []);
-        let baseUrl = window.localStorage.getItem('rph_base_url_override') || 'https://hub.rownd.workers.dev';
+        let baseUrl = window.localStorage.getItem('rph_base_url_override') || 'https://hub.rownd.io';
         _rphConfig.push(['setBaseUrl', baseUrl]);
         var d = document,
             g = d.createElement('script'),
@@ -48,6 +49,13 @@
     _rphConfig.push(['setPostAuthenticationApi', {
         method: 'post',
         url: '/rownd/session_authenticate',
+        extra_headers: {
+            'X-CSRFToken': getCookie('csrftoken')
+        }
+    }]);
+    _rphConfig.push(['setPostSignOutApi', {
+        method: 'post',
+        url: '/rownd/session_sign_out',
         extra_headers: {
             'X-CSRFToken': getCookie('csrftoken')
         }
