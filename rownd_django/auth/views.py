@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rownd_django.settings import rownd_settings
 
 def conditional_csrf_exempt(func):
-    if rownd_settings.CSRF_PROTECT_POST_AUTHENTICATION == True:
+    if rownd_settings.CSRF_PROTECT_ROUTES == True:
         # Do not apply the decorator to the function
         return func
     else:

@@ -172,3 +172,17 @@ The session authenticator will establish an authenticated session if one doesn't
 indicating that the Rownd Hub should trigger a page refresh. This is usually necessary for your app views to display
 the desired authenticated context. In the event that an authenticated session already exists, the Hub will not trigger
 further page refreshes.
+
+#### CSRF Protection
+By d efault CSRF protection is disabled on the two sign-in and sign-out routes provided by Rownd. If
+you would like to enable it on those endpoints, you must ensure all of your sites views contain the
+`csrftoken` cookie and update your settings to enable the CSRF protection. You can find more information
+on the `csrftoken` cookie [here](https://docs.djangoproject.com/en/4.2/ref/csrf/).
+```python
+ROWND = {
+    'APP_KEY': '<your app key>',
+    'APP_SECRET': '<your app secret>',
+    'CSRF_PROTECT_ROUTES': True
+}
+```
+    
