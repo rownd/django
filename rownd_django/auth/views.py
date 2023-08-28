@@ -16,8 +16,8 @@ def conditional_csrf_exempt(func):
 @conditional_csrf_exempt
 @require_POST
 def session_authenticate(request):
-    # if request.user.is_authenticated:
-    #     return HttpResponse(status=200, content=json.dumps({ 'message': 'Already authenticated' }))
+    if request.user.is_authenticated:
+        return HttpResponse(status=200, content=json.dumps({ 'message': 'Already authenticated' }))
 
     token = request.headers.get("Authorization")
 
