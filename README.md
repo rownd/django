@@ -55,8 +55,6 @@ Google One Tap iframe will not load correctly due to a missing Referrer header.
     SECURE_REFERRER_POLICY = "no-referrer-when-downgrade"
 ```
 
-
-
 ### Configure the Rownd Hub (required)
 Rownd authentication requires a small code snippet to be embedded within your app, present on all HTML pages.
 Setup for the Hub/snippet itself is outside the scope of this document, but you can find the relevant setup
@@ -174,7 +172,7 @@ the desired authenticated context. In the event that an authenticated session al
 further page refreshes.
 
 #### CSRF Protection
-By d efault CSRF protection is disabled on the two sign-in and sign-out routes provided by Rownd. If
+By default CSRF protection is disabled on the two sign-in and sign-out routes provided by Rownd. If
 you would like to enable it on those endpoints, you must ensure all of your sites views contain the
 `csrftoken` cookie and update your settings to enable the CSRF protection. You can find more information
 on the `csrftoken` cookie [here](https://docs.djangoproject.com/en/4.2/ref/csrf/).
