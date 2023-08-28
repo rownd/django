@@ -26,7 +26,12 @@ class RowndAuthBackend:
             except User.DoesNotExist:
                 # create the user
                 try:
-                    user = User(username=token_info["sub"], email=rownd_user["data"]["email"], first_name=rownd_user["data"].get("first_name", ""), last_name=rownd_user["data"].get("last_name", ""))
+                    user = User(
+                        username=token_info["sub"],
+                        email=rownd_user["data"]["email"],
+                        first_name=rownd_user["data"].get("first_name", ""),
+                        last_name=rownd_user["data"].get("last_name", "")
+                    )
                     user.save()
                     return user
                 

@@ -2,30 +2,38 @@ import jwt
 import requests
 from rownd_django.auth import jwks_client
 from rownd_django.settings import rownd_settings
+from rownd_django.auth.cache import RowndCache
 
-__app_config = None
+rownd_cache = RowndCache()
 
-def fetch_app_config():
-    global __app_config
-    r = requests.get(f"{rownd_settings.API_URL}/hub/app-config", headers={
-        'x-rownd-app-key': rownd_settings.APP_KEY,
-    })
+class RowndAppConfig():
+    def __init__(self):
+        pass
 
-    if r.status_code != 200:
-        raise Exception(f"Failed to fetch app config: {r.json()}")
+    @property
+    def config(self):
+        return rownd_cache.fetch('rownd:app_config', self.fetch_app_config, 900) # 15 minutes
 
-    __app_config = r.json()
-    return __app_config
+    def fetch_app_config(self):
+        r = requests.get(f"{rownd_settings.API_URL}/hub/app-config", headers={
+            'x-rownd-app-key': rownd_settings.APP_KEY,
+        })
+
+        if r.status_code != 200:
+            raise Exception(f"Failed to fetch app config: {r.json()}")
+
+        return r.json()
+
+__app_config = RowndAppConfig()
 
 def validate_jwt(token: str, audience: list[str]=[]):
-    global __app_config
-    if __app_config is None:
-        fetch_app_config()
+    if __app_config.config is None:
+        raise Exception("Rownd app config not loaded")
 
     jwks_client = fetch_jwks()
     signing_key = jwks_client.get_signing_key_from_jwt(token)
 
-    default_audience = f'app:{__app_config["app"]["id"]}'
+    default_audience = f'app:{__app_config.config["app"]["id"]}'
     audience.append(default_audience)
 
     try:
@@ -46,8 +54,7 @@ def fetch_jwks() -> jwks_client.PyJWKClient:
     return jwks_client.PyJWKClient(url)
 
 def fetch_user(user_id: str):
-    global __app_config
-    r = requests.get(f'{rownd_settings.API_URL}/applications/{__app_config["app"]["id"]}/users/{user_id}/data', headers={
+    r = requests.get(f'{rownd_settings.API_URL}/applications/{__app_config.config["app"]["id"]}/users/{user_id}/data', headers={
         "x-rownd-app-key": rownd_settings.APP_KEY,
         "x-rownd-app-secret": rownd_settings.APP_SECRET,
     })

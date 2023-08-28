@@ -18,6 +18,7 @@ DEFAULTS = {
     'API_URL': 'https://api.rownd.io',
     'APP_KEY': os.environ.get("ROWND_APP_KEY") or None,
     'APP_SECRET': os.environ.get("ROWND_APP_KEY") or None,
+    'CSRF_PROTECT_ROUTES': False,
 }
 
 
