@@ -1,18 +1,23 @@
 from django.contrib.auth.backends import BaseBackend
-from django.contrib.auth.models import User
+# Import the get_user_model function
+from django.contrib.auth import get_user_model
 
 from rest_framework import authentication, exceptions
 
 from rownd_django.auth import client
 
+User = get_user_model()  # Get the user model dynamically
+
+
 class RowndAuthError(Exception):
     pass
+
 
 class RowndAuthBackend:
     def _authenticate(self, token: str):
         if not token:
             return None
-            
+
         try:
             token_info = client.validate_jwt(token)
             user = User.objects.get(username=token_info["sub"])
@@ -20,7 +25,8 @@ class RowndAuthBackend:
         except User.DoesNotExist:
             # fetch user from Rownd
             try:
-                rownd_user = client.fetch_user(token_info["https://auth.rownd.io/app_user_id"])
+                rownd_user = client.fetch_user(
+                    token_info["https://auth.rownd.io/app_user_id"])
                 user = User.objects.get(email=rownd_user["data"]["email"])
                 return user
             except User.DoesNotExist:
@@ -34,7 +40,7 @@ class RowndAuthBackend:
                     )
                     user.save()
                     return user
-                
+
                 except:
                     raise RowndAuthError("Failed to locate or create user")
         except Exception as e:
@@ -43,11 +49,12 @@ class RowndAuthBackend:
             # something went wrong creating the local user
             raise RowndAuthError(e)
 
+
 class RowndAuthenticationBackend(RowndAuthBackend, BaseBackend):
     def authenticate(self, request, token=None):
         try:
             return self._authenticate(token)
-        
+
         except Exception as e:
             print(e)
             return None
@@ -57,6 +64,7 @@ class RowndAuthenticationBackend(RowndAuthBackend, BaseBackend):
             return User.objects.get(pk=user_id)
         except User.DoesNotExist:
             return None
+
 
 class RowndApiAuthentication(RowndAuthBackend, authentication.BaseAuthentication):
     def authenticate(self, request):
