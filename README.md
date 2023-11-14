@@ -184,3 +184,12 @@ ROWND = {
 }
 ```
     
+#### Custom User Model
+If you are using a customized user model that changes the default `USERNAME_FIELD` value from `username`, 
+you must tell the Rownd SDK the property name.
+
+```python
+ROWND = {
+    'USER_MODEL_USERNAME_FIELD': 'email',
+}
+```
