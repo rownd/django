@@ -19,6 +19,7 @@ DEFAULTS = {
     'APP_KEY': os.environ.get("ROWND_APP_KEY") or None,
     'APP_SECRET': os.environ.get("ROWND_APP_KEY") or None,
     'CSRF_PROTECT_ROUTES': False,
+    'USER_MODEL_USERNAME_FIELD': 'username',
 }
 
 
@@ -102,10 +103,13 @@ class RowndSettings:
         return val
 
     def __check_user_settings(self, user_settings):
-        SETTINGS_DOC = "https://docs.rownd.io/rownd/sdk-reference/web/django"
+        SETTINGS_DOC = "https://docs.rownd.io/sdk-reference/web/django--python"
         for setting in REMOVED_SETTINGS:
             if setting in user_settings:
                 raise RuntimeError("The '%s' setting has been removed. Please refer to '%s' for available settings." % (setting, SETTINGS_DOC))
+
+        if user_settings["USER_MODEL_USERNAME_FIELD"] not in ["username", "email"]:
+            raise RuntimeError("The 'USER_MODEL_USERNAME_FIELD' value can only be 'username' or 'email'")
         return user_settings
 
     def reload(self):

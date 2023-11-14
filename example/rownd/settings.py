@@ -27,7 +27,8 @@ SECRET_KEY = 'django-insecure-$&^*o0k+a1(-mtng4)#ub+h#brb($vy+u!u5svb#h95a%-2g7y
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    "localhost"
+    "localhost",
+    "127.0.0.1"
 ]
 
 # For google One Tap to work
@@ -147,5 +148,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 ROWND = {
     # 'API_URL': 'https://api.us-east-2.dev.rownd.io',
     'APP_KEY': 'ea1a6191-8efa-4dfb-ab20-83c74fd19675',
-    'APP_SECRET': '8285f0a16a69582208b2cbd6517d133427488add1a8fcd93'
+    'APP_SECRET': '8285f0a16a69582208b2cbd6517d133427488add1a8fcd93',
+    # 'USER_MODEL_USERNAME_FIELD': 'email'
 }

@@ -1,10 +1,9 @@
 from django.contrib.auth.backends import BaseBackend
 # Import the get_user_model function
 from django.contrib.auth import get_user_model
-
 from rest_framework import authentication, exceptions
-
 from rownd_django.auth import client
+from rownd_django.settings import rownd_settings
 
 User = get_user_model()  # Get the user model dynamically
 
@@ -20,8 +19,11 @@ class RowndAuthBackend:
 
         try:
             token_info = client.validate_jwt(token)
-            user = User.objects.get(username=token_info["sub"])
-            return user
+
+            args = {
+                rownd_settings.USER_MODEL_USERNAME_FIELD: token_info["sub"]
+            }
+            return User.objects.get(**args)
         except User.DoesNotExist:
             # fetch user from Rownd
             try:
@@ -32,12 +34,17 @@ class RowndAuthBackend:
             except User.DoesNotExist:
                 # create the user
                 try:
-                    user = User(
-                        username=token_info["sub"],
-                        email=rownd_user["data"]["email"],
-                        first_name=rownd_user["data"].get("first_name", ""),
-                        last_name=rownd_user["data"].get("last_name", "")
-                    )
+                    args = {
+                        "email": rownd_user["data"]["email"],
+                        "first_name": rownd_user["data"].get("first_name", ""),
+                        "last_name": rownd_user["data"].get("last_name", "")
+                    }
+
+                    username_field = rownd_settings.USER_MODEL_USERNAME_FIELD
+                    if username_field != "email":
+                        args[rownd_settings.USER_MODEL_USERNAME_FIELD] = token_info["sub"]
+
+                    user = User(**args)
                     user.save()
                     return user
 
