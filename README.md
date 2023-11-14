@@ -158,7 +158,7 @@ Finally, update your Rownd Hub code snippet to fire post-authenticate and post-s
     }]);
     _rphConfig.push(['setPostSignOutApi', {
         method: 'post',
-        url: '/rownd/session_post_sign_out',
+        url: '/rownd/session_sign_out',
         extra_headers: {
             'X-CSRFToken': getCookie('csrftoken')
         }
