@@ -21,7 +21,10 @@
                 "runserver",
             ],
             "django": true,
-            "justMyCode": false
+            "justMyCode": false,
+            "env": {
+                "RUN_MAIN": "true"
+            }
         },
     ]
 }
