@@ -1,4 +1,4 @@
-Django>=3.0
+Django>=4.2.14
 PyJWT>=2.3
 cryptography>=36.0
 requests>=2.27
