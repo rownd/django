@@ -54,3 +54,6 @@ def check_auth(request):
         'is_authenticated': request.user.is_authenticated,
         'user': request.user
     })
+
+def index(request):
+    return HttpResponse("Hello, world. You're at the rownd index.")

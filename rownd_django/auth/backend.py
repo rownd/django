@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import authentication, exceptions
 from rownd_django.auth import client
 from rownd_django.settings import rownd_settings
+import traceback
 
 User = get_user_model()  # Get the user model dynamically
 
@@ -27,22 +28,22 @@ class RowndAuthBackend:
         except User.DoesNotExist:
             # fetch user from Rownd
             try:
-                rownd_user = client.fetch_user(
-                    token_info["https://auth.rownd.io/app_user_id"])
-                user = User.objects.get(email=rownd_user["data"]["email"])
+                rownd_user_id = token_info["https://auth.rownd.io/app_user_id"]
+                rownd_user = client.fetch_user(rownd_user_id)
+                user = User.objects.get(email=rownd_user["data"].get("email", rownd_user_id))
                 return user
             except User.DoesNotExist:
                 # create the user
                 try:
                     args = {
-                        "email": rownd_user["data"]["email"],
+                        "email": rownd_user["data"].get("email", rownd_user_id),
                         "first_name": rownd_user["data"].get("first_name", ""),
                         "last_name": rownd_user["data"].get("last_name", "")
                     }
 
                     username_field = rownd_settings.USER_MODEL_USERNAME_FIELD
                     if username_field != "email":
-                        args[rownd_settings.USER_MODEL_USERNAME_FIELD] = token_info["sub"]
+                        args[rownd_settings.USER_MODEL_USERNAME_FIELD] = rownd_user_id
 
                     user = User(**args)
                     user.save()
@@ -63,7 +64,7 @@ class RowndAuthenticationBackend(RowndAuthBackend, BaseBackend):
             return self._authenticate(token)
 
         except Exception as e:
-            print(e)
+            print(traceback.format_exc())
             return None
 
     def get_user(self, user_id):

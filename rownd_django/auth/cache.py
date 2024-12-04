@@ -21,6 +21,5 @@ class RowndCache:
             
             return return_val
 
-    @asyncio.coroutine
-    def cache_set_coroutine(self, cache_key: str, cache_val: any):
+    async def cache_set_coroutine(self, cache_key: str, cache_val: any):
         cache.set(cache_key, cache_val)

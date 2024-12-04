@@ -68,13 +68,13 @@ REST_FRAMEWORK = {
     ]
 }
 
-ROOT_URLCONF = 'rownd.urls'
+ROOT_URLCONF = 'core.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, 'rownd/templates/'),
+            os.path.join(BASE_DIR, 'core/templates/'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -88,7 +88,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'rownd.wsgi.application'
+WSGI_APPLICATION = 'core.wsgi.application'
 
 
 # Database
