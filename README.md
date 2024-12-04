@@ -5,7 +5,7 @@ Easily add Rownd instant accounts to your Django-backed apps.
 
 Begin by adding the `rownd_django` package to your dependencies. In `requirements.txt`, this would look like:
 ```
-rownd_django>=1.0.0
+rownd_django>=1.2.0
 ```
 
 > NOTE: This plugin only works with Django v3 and above. We strongly recommend upgrading if you're
