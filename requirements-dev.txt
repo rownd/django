@@ -1,7 +1,7 @@
-Django>=3.0
+Django>=4.2.22
 PyJWT>=2.3
 cryptography>=36.0
-requests>=2.27
+requests>=2.32.4
 djangorestframework>=3.14.0
 build>=1.2.2
 twine>=6.0.1
