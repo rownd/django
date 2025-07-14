@@ -5,3 +5,4 @@ requests>=2.27
 djangorestframework>=3.14.0
 build>=1.2.2
 twine>=6.0.1
+urllib3>=2.5.0 # not directly required, pinned by Snyk to avoid a vulnerability
