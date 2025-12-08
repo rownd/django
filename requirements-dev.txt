@@ -1,7 +1,9 @@
-Django>=3.0
+Django>=4.2.27
 PyJWT>=2.3
 cryptography>=36.0
 requests>=2.27
 djangorestframework>=3.14.0
 build>=1.2.2
 twine>=6.0.1
+sqlparse>=0.5.4 # not directly required, pinned by Snyk to avoid a vulnerability
+urllib3>=2.6.0 # not directly required, pinned by Snyk to avoid a vulnerability
